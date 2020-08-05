@@ -15,7 +15,7 @@ public class Chunk {
 
 	World world;
 
-	byte[,,] voxelMap = new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+	public byte[,,] voxelMap = new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
 	public Chunk (ChunkCoord _coord, World _world) {
 		coord = _coord;
