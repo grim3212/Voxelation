@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 	public bool isGrounded;
@@ -30,10 +31,17 @@ public class Player : MonoBehaviour {
 	public float checkIncrement = 0.1f;
 	public float reach = 8;
 
+	public Text selectedBlockText;
+	public byte selectedBlockIndex = 1;
+
 	// Start is called before the first frame update
 	void Start () {
 		cam = GameObject.Find ("Main Camera").transform;
 		world = GameObject.Find ("World").GetComponent<World> ();
+
+		Cursor.lockState = CursorLockMode.Locked;
+
+		selectedBlockText.text = world.blockTypes[selectedBlockIndex].blockName + " block selected";
 	}
 
 	void FixedUpdate () {
@@ -49,6 +57,7 @@ public class Player : MonoBehaviour {
 
 	void Update () {
 		GetPlayerInputs ();
+		placeCursorBlock ();
 		transform.Rotate (Vector3.up * mouseHorizontal);
 		cam.Rotate (Vector3.right * -mouseVertical);
 	}
@@ -107,15 +116,63 @@ public class Player : MonoBehaviour {
 		if (isGrounded && Input.GetButtonDown ("Jump")) {
 			jumpRequest = true;
 		}
+
+		float scroll = Input.GetAxis ("Mouse ScrollWheel");
+
+		if (scroll != 0) {
+			if (scroll > 0) {
+				selectedBlockIndex++;
+			}
+			else {
+				selectedBlockIndex--;
+			}
+
+			if (selectedBlockIndex > (byte)(world.blockTypes.Length - 1)) {
+				selectedBlockIndex = 1;
+			}
+			if (selectedBlockIndex < 1) {
+				selectedBlockIndex = (byte)(world.blockTypes.Length - 1);
+			}
+
+			selectedBlockText.text = world.blockTypes[selectedBlockIndex].blockName + " block selected";
+		}
+
+		if (highlightBlock.gameObject.activeSelf) {
+			if (Input.GetMouseButtonDown (0)) {
+				world.GetChunkFromVector3 (highlightBlock.position).EditVoxel (highlightBlock.position, 0);
+			}
+			if (Input.GetMouseButtonDown (1)) {
+				world.GetChunkFromVector3 (placeHighlightBlock.position).EditVoxel (placeHighlightBlock.position, selectedBlockIndex);
+			}
+		}
 	}
 
 	void placeCursorBlock () {
 		float step = checkIncrement;
-		Vector3 lastPos = new Vector3();
+		Vector3 lastPos = new Vector3 ();
 
-		while(step < reach) {
-			Vector3 pos = cam.position + (cam.forward)
+		while (step < reach) {
+			Vector3 pos = cam.position + (cam.forward * step);
+
+			if (world.CheckForVoxel (pos)) {
+
+				highlightBlock.position = new Vector3 (Mathf.FloorToInt (pos.x), Mathf.FloorToInt (pos.y), Mathf.FloorToInt (pos.z));
+				placeHighlightBlock.position = lastPos;
+
+				highlightBlock.gameObject.SetActive (true);
+				placeHighlightBlock.gameObject.SetActive (true);
+
+				return;
+
+			}
+
+			lastPos = new Vector3 (Mathf.FloorToInt (pos.x), Mathf.FloorToInt (pos.y), Mathf.FloorToInt (pos.z));
+
+			step += checkIncrement;
 		}
+
+		highlightBlock.gameObject.SetActive (false);
+		placeHighlightBlock.gameObject.SetActive (false);
 	}
 
 	float checkDownSpeed (float downSpeed) {
