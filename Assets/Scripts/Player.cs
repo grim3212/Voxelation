@@ -24,6 +24,12 @@ public class Player : MonoBehaviour {
 	float verticalMomemtum = 0.0f;
 	bool jumpRequest;
 
+	public Transform highlightBlock;
+	public Transform placeHighlightBlock;
+
+	public float checkIncrement = 0.1f;
+	public float reach = 8;
+
 	// Start is called before the first frame update
 	void Start () {
 		cam = GameObject.Find ("Main Camera").transform;
@@ -37,13 +43,13 @@ public class Player : MonoBehaviour {
 			Jump ();
 		}
 
-		
+
 		transform.Translate (velocity, Space.World);
 	}
 
 	void Update () {
 		GetPlayerInputs ();
-        transform.Rotate (Vector3.up * mouseHorizontal);
+		transform.Rotate (Vector3.up * mouseHorizontal);
 		cam.Rotate (Vector3.right * -mouseVertical);
 	}
 
@@ -103,12 +109,21 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	void placeCursorBlock () {
+		float step = checkIncrement;
+		Vector3 lastPos = new Vector3();
+
+		while(step < reach) {
+			Vector3 pos = cam.position + (cam.forward)
+		}
+	}
+
 	float checkDownSpeed (float downSpeed) {
 		if (
-			world.CheckForVoxel (transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth) ||
-			world.CheckForVoxel (transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth) ||
-			world.CheckForVoxel (transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth) ||
-			world.CheckForVoxel (transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth)
+			world.CheckForVoxel (new Vector3 (transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth)) ||
+			world.CheckForVoxel (new Vector3 (transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth)) ||
+			world.CheckForVoxel (new Vector3 (transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth)) ||
+			world.CheckForVoxel (new Vector3 (transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth))
 		) {
 			isGrounded = true;
 			return 0;
@@ -121,10 +136,10 @@ public class Player : MonoBehaviour {
 
 	float checkUpSpeed (float upSpeed) {
 		if (
-			world.CheckForVoxel (transform.position.x - playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth) ||
-			world.CheckForVoxel (transform.position.x + playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth) ||
-			world.CheckForVoxel (transform.position.x + playerWidth, transform.position.y + 2f + upSpeed, transform.position.z + playerWidth) ||
-			world.CheckForVoxel (transform.position.x - playerWidth, transform.position.y + 2f + upSpeed, transform.position.z + playerWidth)
+			world.CheckForVoxel (new Vector3 (transform.position.x - playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth)) ||
+			world.CheckForVoxel (new Vector3 (transform.position.x + playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth)) ||
+			world.CheckForVoxel (new Vector3 (transform.position.x + playerWidth, transform.position.y + 2f + upSpeed, transform.position.z + playerWidth)) ||
+			world.CheckForVoxel (new Vector3 (transform.position.x - playerWidth, transform.position.y + 2f + upSpeed, transform.position.z + playerWidth))
 		) {
 			return 0;
 		}
@@ -136,8 +151,8 @@ public class Player : MonoBehaviour {
 	public bool front {
 		get {
 			if (
-				world.CheckForVoxel (transform.position.x, transform.position.y, transform.position.z + playerWidth) ||
-				world.CheckForVoxel (transform.position.x, transform.position.y + 1f, transform.position.z + playerWidth)
+				world.CheckForVoxel (new Vector3 (transform.position.x, transform.position.y, transform.position.z + playerWidth)) ||
+				world.CheckForVoxel (new Vector3 (transform.position.x, transform.position.y + 1f, transform.position.z + playerWidth))
 			) {
 				return true;
 			}
@@ -150,8 +165,8 @@ public class Player : MonoBehaviour {
 	public bool back {
 		get {
 			if (
-				world.CheckForVoxel (transform.position.x, transform.position.y, transform.position.z - playerWidth) ||
-				world.CheckForVoxel (transform.position.x, transform.position.y + 1f, transform.position.z - playerWidth)
+				world.CheckForVoxel (new Vector3 (transform.position.x, transform.position.y, transform.position.z - playerWidth)) ||
+				world.CheckForVoxel (new Vector3 (transform.position.x, transform.position.y + 1f, transform.position.z - playerWidth))
 			) {
 				return true;
 			}
@@ -164,8 +179,8 @@ public class Player : MonoBehaviour {
 	public bool left {
 		get {
 			if (
-				world.CheckForVoxel (transform.position.x - playerWidth, transform.position.y, transform.position.z) ||
-				world.CheckForVoxel (transform.position.x - playerWidth, transform.position.y + 1f, transform.position.z)
+				world.CheckForVoxel (new Vector3 (transform.position.x - playerWidth, transform.position.y, transform.position.z)) ||
+				world.CheckForVoxel (new Vector3 (transform.position.x - playerWidth, transform.position.y + 1f, transform.position.z))
 			) {
 				return true;
 			}
@@ -178,8 +193,8 @@ public class Player : MonoBehaviour {
 	public bool right {
 		get {
 			if (
-				world.CheckForVoxel (transform.position.x + playerWidth, transform.position.y, transform.position.z) ||
-				world.CheckForVoxel (transform.position.x + playerWidth, transform.position.y + 1f, transform.position.z)
+				world.CheckForVoxel (new Vector3 (transform.position.x + playerWidth, transform.position.y, transform.position.z)) ||
+				world.CheckForVoxel (new Vector3 (transform.position.x + playerWidth, transform.position.y + 1f, transform.position.z))
 			) {
 				return true;
 			}
