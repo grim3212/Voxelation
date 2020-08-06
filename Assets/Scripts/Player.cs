@@ -31,7 +31,7 @@ public class Player : MonoBehaviour {
 	public float checkIncrement = 0.1f;
 	public float reach = 8;
 
-	public byte selectedBlockIndex = 1;
+	public Toolbar toolbar;
 
 	// Start is called before the first frame update
 	void Start () {
@@ -42,21 +42,29 @@ public class Player : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		CalculateVelocity ();
+		if (!world.inUI) {
+			CalculateVelocity ();
 
-		if (jumpRequest) {
-			Jump ();
+			if (jumpRequest) {
+				Jump ();
+			}
+
+			transform.Translate (velocity, Space.World);
 		}
-
-
-		transform.Translate (velocity, Space.World);
 	}
 
 	void Update () {
-		GetPlayerInputs ();
-		placeCursorBlock ();
-		transform.Rotate (Vector3.up * mouseHorizontal);
-		cam.Rotate (Vector3.right * -mouseVertical);
+		if (Input.GetKeyDown (KeyCode.E)) {
+			world.inUI = !world.inUI;
+		}
+
+		if (!world.inUI) {
+			GetPlayerInputs ();
+			placeCursorBlock ();
+
+			transform.Rotate (Vector3.up * mouseHorizontal);
+			cam.Rotate (Vector3.right * -mouseVertical);
+		}
 	}
 
 	void Jump () {
@@ -119,7 +127,10 @@ public class Player : MonoBehaviour {
 				world.GetChunkFromVector3 (highlightBlock.position).EditVoxel (highlightBlock.position, 0);
 			}
 			if (Input.GetMouseButtonDown (1)) {
-				world.GetChunkFromVector3 (placeHighlightBlock.position).EditVoxel (placeHighlightBlock.position, selectedBlockIndex);
+				if (toolbar.slots[toolbar.slotIndex].HasItem) {
+					world.GetChunkFromVector3 (placeHighlightBlock.position).EditVoxel (placeHighlightBlock.position, toolbar.slots[toolbar.slotIndex].itemSlot.stack.id);
+					toolbar.slots[toolbar.slotIndex].itemSlot.Take (1);
+				}
 			}
 		}
 	}
