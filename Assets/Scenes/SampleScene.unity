@@ -1437,6 +1437,16 @@ MonoBehaviour:
     bottomFaceTexture: 3
     leftFaceTexture: 3
     rightFaceTexture: 3
+  - blockName: Leave
+    isSolid: 1
+    isTransparent: 1
+    icon: {fileID: -1867609910350370242, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
+    backFaceTexture: 16
+    frontFaceTexture: 16
+    topFaceTexture: 16
+    bottomFaceTexture: 16
+    leftFaceTexture: 16
+    rightFaceTexture: 16
   debugScreen: {fileID: 2007004019}
 --- !u!4 &1113130123
 Transform:
