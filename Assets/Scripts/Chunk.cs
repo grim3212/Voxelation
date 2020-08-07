@@ -66,7 +66,8 @@ public class Chunk {
 			world.chunksToUpdate.Add (this);
 		}
 
-		chunkObject.AddComponent<ChunkLoadAnimation>();
+		if (world.settings.enableAnimatedChunks)
+			chunkObject.AddComponent<ChunkLoadAnimation> ();
 	}
 
 	public void UpdateChunk () {
@@ -185,13 +186,13 @@ public class Chunk {
 
 
 				if (!world.blockTypes[neighbor.id].renderNeighborFaces) {
-				triangles.Add (vertexIndex);
-				triangles.Add (vertexIndex + 1);
-				triangles.Add (vertexIndex + 2);
-				triangles.Add (vertexIndex + 2);
-				triangles.Add (vertexIndex + 1);
-				triangles.Add (vertexIndex + 3);
-				 }
+					triangles.Add (vertexIndex);
+					triangles.Add (vertexIndex + 1);
+					triangles.Add (vertexIndex + 2);
+					triangles.Add (vertexIndex + 2);
+					triangles.Add (vertexIndex + 1);
+					triangles.Add (vertexIndex + 3);
+				}
 				else {
 					transparentTriangles.Add (vertexIndex);
 					transparentTriangles.Add (vertexIndex + 1);
@@ -199,7 +200,7 @@ public class Chunk {
 					transparentTriangles.Add (vertexIndex + 2);
 					transparentTriangles.Add (vertexIndex + 1);
 					transparentTriangles.Add (vertexIndex + 3);
-				} 
+				}
 
 				vertexIndex += 4;
 			}
