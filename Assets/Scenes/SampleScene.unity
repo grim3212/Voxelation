@@ -1083,7 +1083,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.1
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -1111,7 +1111,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.8, z: 0}
+  m_LocalPosition: {x: 0, y: 1.8, z: -0.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1054143958}
@@ -1263,7 +1263,7 @@ MonoBehaviour:
   sprintSpeed: 6
   jumpForce: 5
   gravity: -9.8
-  playerWidth: 0.3
+  playerWidth: 0.25
   highlightBlock: {fileID: 163717720}
   placeHighlightBlock: {fileID: 1357286227}
   checkIncrement: 0.1
@@ -1298,16 +1298,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141227896735ea743b35886156670b2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 42
+  settings:
+    version: 0.0.1
+    viewDistance: 5
+    enableThreading: 1
+    seed: 42
+    mouseSensitivity: 1.76
   biome: {fileID: 11400000, guid: ea02da3cd4986984bbef5606f7fed15c, type: 2}
-  enableThreading: 0
-  globalLightLevel: 0.32
+  globalLightLevel: 0.853
   day: {r: 0.0658597, g: 0.9433962, b: 0.87928087, a: 0}
   night: {r: 0.12160911, g: 0.25609812, b: 0.5283019, a: 0}
   player: {fileID: 1054143958}
   spawnPosition: {x: 0, y: 0, z: 0}
   material: {fileID: 2100000, guid: 4c0c60dfe636ae84a9794b910cc7a172, type: 2}
-  transparentMaterial: {fileID: 2100000, guid: c6e9c026cd9c01c4e803b03e8d08949d, type: 2}
+  transparentMaterial: {fileID: 2100000, guid: 3d7f30fa39b56b74ea02803add9f099e, type: 2}
   blockTypes:
   - blockName: Air
     isSolid: 0
@@ -1582,7 +1586,6 @@ GameObject:
   - component: {fileID: 1196247851}
   - component: {fileID: 1196247854}
   - component: {fileID: 1196247853}
-  - component: {fileID: 1196247852}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -1604,19 +1607,6 @@ Transform:
   m_Father: {fileID: 1357286227}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1196247852
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1196247850}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1196247853
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1752,7 +1742,7 @@ LightingSettings:
   m_Name: Settings.lighting
   serializedVersion: 2
   m_GIWorkflowMode: 1
-  m_EnableBakedLightmaps: 1
+  m_EnableBakedLightmaps: 0
   m_EnableRealtimeLightmaps: 0
   m_RealtimeEnvironmentLighting: 1
   m_BounceScale: 1
@@ -1815,7 +1805,6 @@ GameObject:
   - component: {fileID: 1641867638}
   - component: {fileID: 1641867641}
   - component: {fileID: 1641867640}
-  - component: {fileID: 1641867639}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -1837,19 +1826,6 @@ Transform:
   m_Father: {fileID: 163717720}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1641867639
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1641867637}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1641867640
 MeshRenderer:
   m_ObjectHideFlags: 0

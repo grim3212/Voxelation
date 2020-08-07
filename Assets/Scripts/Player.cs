@@ -38,7 +38,7 @@ public class Player : MonoBehaviour {
 		cam = GameObject.Find ("Main Camera").transform;
 		world = GameObject.Find ("World").GetComponent<World> ();
 
-		Cursor.lockState = CursorLockMode.Locked;
+		world.inUI = false;
 	}
 
 	void FixedUpdate () {
@@ -62,8 +62,8 @@ public class Player : MonoBehaviour {
 			GetPlayerInputs ();
 			placeCursorBlock ();
 
-			transform.Rotate (Vector3.up * mouseHorizontal);
-			cam.Rotate (Vector3.right * -mouseVertical);
+			transform.Rotate (Vector3.up * mouseHorizontal * world.settings.mouseSensitivity);
+			cam.Rotate (Vector3.right * -mouseVertical * world.settings.mouseSensitivity);
 		}
 	}
 
@@ -105,6 +105,10 @@ public class Player : MonoBehaviour {
 	}
 
 	void GetPlayerInputs () {
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			Application.Quit ();
+		}
+
 		// TODO: Use unitys new input package
 		horizontal = Input.GetAxis ("Horizontal");
 		vertical = Input.GetAxis ("Vertical");

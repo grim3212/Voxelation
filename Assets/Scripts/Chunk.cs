@@ -15,6 +15,7 @@ public class Chunk {
 	Material[] materials = new Material[2];
 	List<Vector2> uvs = new List<Vector2> ();
 	List<Color> colors = new List<Color> ();
+	List<Vector3> normals = new List<Vector3> ();
 
 	public Queue<VoxelMod> modifications = new Queue<VoxelMod> ();
 
@@ -37,9 +38,9 @@ public class Chunk {
 		meshFilter = chunkObject.AddComponent<MeshFilter> ();
 		meshRenderer = chunkObject.AddComponent<MeshRenderer> ();
 
-		//materials[0] = world.material;
-		//materials[1] = world.transparentMaterial;
-		meshRenderer.material = world.material;
+		materials[0] = world.material;
+		materials[1] = world.transparentMaterial;
+		meshRenderer.materials = materials;
 
 		chunkObject.transform.SetParent (world.transform);
 		chunkObject.transform.position = new Vector3 (coord.x * VoxelData.ChunkWidth, 0.0f, coord.z * VoxelData.ChunkWidth);
@@ -59,8 +60,13 @@ public class Chunk {
 			}
 		}
 
-		UpdateChunk ();
 		isVoxelMapPopulated = true;
+
+		lock (world.ChunkUpdateThreadLock) {
+			world.chunksToUpdate.Add (this);
+		}
+
+		chunkObject.AddComponent<ChunkLoadAnimation>();
 	}
 
 	public void UpdateChunk () {
@@ -87,7 +93,6 @@ public class Chunk {
 		lock (world.chunksToDraw) {
 			world.chunksToDraw.Enqueue (this);
 		}
-
 
 	}
 
@@ -144,6 +149,7 @@ public class Chunk {
 		transparentTriangles.Clear ();
 		uvs.Clear ();
 		colors.Clear ();
+		normals.Clear ();
 	}
 
 	void UpdateMeshData (Vector3 pos) {
@@ -152,7 +158,6 @@ public class Chunk {
 		int z = Mathf.FloorToInt (pos.z);
 
 		byte blockId = voxelMap[x, y, z].id;
-		//bool isTransparent = world.blockTypes[blockId].renderNeighborFaces;
 
 		for (int p = 0; p < 6; p++) {
 
@@ -165,6 +170,10 @@ public class Chunk {
 				vertices.Add (pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 2]]);
 				vertices.Add (pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 3]]);
 
+				for (int i = 0; i < 4; i++) {
+					normals.Add (VoxelData.faceChecks[p]);
+				}
+
 				AddTexture (world.blockTypes[blockId].GetTextureId (p));
 
 				float lightLevel = neighbor.globalLightPercent;
@@ -175,14 +184,14 @@ public class Chunk {
 				colors.Add (new Color (0, 0, 0, lightLevel));
 
 
-				// if (!isTransparent) {
+				if (!world.blockTypes[neighbor.id].renderNeighborFaces) {
 				triangles.Add (vertexIndex);
 				triangles.Add (vertexIndex + 1);
 				triangles.Add (vertexIndex + 2);
 				triangles.Add (vertexIndex + 2);
 				triangles.Add (vertexIndex + 1);
 				triangles.Add (vertexIndex + 3);
-				/* }
+				 }
 				else {
 					transparentTriangles.Add (vertexIndex);
 					transparentTriangles.Add (vertexIndex + 1);
@@ -190,7 +199,7 @@ public class Chunk {
 					transparentTriangles.Add (vertexIndex + 2);
 					transparentTriangles.Add (vertexIndex + 1);
 					transparentTriangles.Add (vertexIndex + 3);
-				} */
+				} 
 
 				vertexIndex += 4;
 			}
@@ -233,10 +242,12 @@ public class Chunk {
 
 		voxelMap[xCheck, yCheck, zCheck].id = newId;
 
-		// Update surround chunks
-		UpdateSurroundVoxels (xCheck, yCheck, zCheck);
+		lock (world.ChunkUpdateThreadLock) {
+			world.chunksToUpdate.Insert (0, this);
+			// Update surround chunks
+			UpdateSurroundVoxels (xCheck, yCheck, zCheck);
+		}
 
-		UpdateChunk ();
 	}
 
 	void UpdateSurroundVoxels (int x, int y, int z) {
@@ -246,7 +257,7 @@ public class Chunk {
 			Vector3 currentVoxel = thisVoxel + VoxelData.faceChecks[p];
 
 			if (!IsVoxelInChunk ((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z)) {
-				world.GetChunkFromVector3 (currentVoxel + position).UpdateChunk ();
+				world.chunksToUpdate.Insert (0, world.GetChunkFromVector3 (currentVoxel + position));
 			}
 		}
 	}
@@ -278,15 +289,14 @@ public class Chunk {
 		Mesh mesh = new Mesh ();
 		mesh.vertices = vertices.ToArray ();
 
-		//mesh.subMeshCount = 2;
-		//mesh.SetTriangles (triangles.ToArray (), 0);
-		//mesh.SetTriangles (transparentTriangles.ToArray (), 1);
+		mesh.subMeshCount = 2;
+		mesh.SetTriangles (triangles.ToArray (), 0);
+		mesh.SetTriangles (transparentTriangles.ToArray (), 1);
 
-		mesh.triangles = triangles.ToArray ();
 		mesh.uv = uvs.ToArray ();
 		mesh.colors = colors.ToArray ();
 
-		mesh.RecalculateNormals ();
+		mesh.normals = normals.ToArray ();
 
 		meshFilter.mesh = mesh;
 	}

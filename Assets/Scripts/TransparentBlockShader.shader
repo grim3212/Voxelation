@@ -1,11 +1,13 @@
-﻿Shader "Voxelation/Blocks" {
+﻿Shader "Voxelation/Transparent Blocks" {
     Properties {
         _MainTex ("Block Texture Atlas", 2D) = "white" {}
     }
 
     SubShader {
         Tags {
-            "RenderType" = "Opaque"
+            "Queue" = "AlphaTest"
+            "IgnoreProjector"="True"
+            "RenderType"="TransparentCutout"
         }
         LOD 100
         Lighting Off
@@ -51,6 +53,8 @@
                     float shade = (maxLightLevel - minLightLevel) * GlobalLightLevel + minLightLevel;
                     shade *= i.color.a;
                     shade = clamp(1 - shade, minLightLevel, maxLightLevel);
+
+                    clip(col.a - 1);
 
                     col = lerp(col, float4(0, 0, 0, 1), shade);
 
