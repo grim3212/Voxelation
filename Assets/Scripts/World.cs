@@ -25,8 +25,7 @@ public class World : MonoBehaviour {
 	public ChunkCoord playerChunkCoord;
 	ChunkCoord playerLastChunkCoord;
 
-	List<ChunkCoord> chunksToCreate = new List<ChunkCoord> ();
-	public List<Chunk> chunksToUpdate = new List<Chunk> ();
+	private List<Chunk> chunksToUpdate = new List<Chunk> ();
 	public Queue<Chunk> chunksToDraw = new Queue<Chunk> ();
 
 	bool applyingModifications = false;
@@ -66,7 +65,7 @@ public class World : MonoBehaviour {
 	private void Start () {
 		Debug.Log ("Generating new world using seed : " + VoxelData.seed);
 
-		worldData = SaveSystem.LoadWorld("Testing");
+		worldData = SaveSystem.LoadWorld ("TestingCaves");
 
 		string jsonImport = File.ReadAllText (Application.dataPath + "/settings.cfg");
 		settings = JsonUtility.FromJson<Settings> (jsonImport);
@@ -76,16 +75,18 @@ public class World : MonoBehaviour {
 		Shader.SetGlobalFloat ("minLightLevel", VoxelData.minLightLevel);
 		Shader.SetGlobalFloat ("maxLightLevel", VoxelData.maxLightLevel);
 
+		LoadWorld ();
+
+		SetGlobalLightValue ();
+		spawnPosition = new Vector3 (VoxelData.WorldCenter, VoxelData.ChunkHeight - 50.0f, VoxelData.WorldCenter);
+		player.position = spawnPosition;
+		CheckViewDistance ();
+		playerLastChunkCoord = GetChunkCoordFromVector3 (player.position);
 
 		if (settings.enableThreading) {
 			ChunkUpdateThread = new Thread (new ThreadStart (ThreadedUpdate));
 			ChunkUpdateThread.Start ();
 		}
-
-		SetGlobalLightValue ();
-		spawnPosition = new Vector3 (VoxelData.WorldCenter, VoxelData.ChunkHeight - 50.0f, VoxelData.WorldCenter);
-		GenerateWorld ();
-		playerLastChunkCoord = GetChunkCoordFromVector3 (player.position);
 	}
 
 	public void SetGlobalLightValue () {
@@ -102,10 +103,6 @@ public class World : MonoBehaviour {
 
 		if (!applyingModifications) {
 			ApplyModifications ();
-		}
-
-		if (chunksToCreate.Count > 0) {
-			CreateChunk ();
 		}
 
 		if (chunksToDraw.Count > 0) {
@@ -128,7 +125,7 @@ public class World : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown (KeyCode.F1)) {
-			SaveSystem.SaveWorld(worldData);
+			SaveSystem.SaveWorld (worldData);
 		}
 	}
 	void LoadWorld () {
@@ -139,17 +136,20 @@ public class World : MonoBehaviour {
 		}
 	}
 
-	void GenerateWorld () {
-		for (int x = (VoxelData.WorldSizeInChunks / 2) - settings.viewDistance; x < (VoxelData.WorldSizeInChunks / 2) + settings.viewDistance; x++) {
-			for (int z = (VoxelData.WorldSizeInChunks / 2) - settings.viewDistance; z < (VoxelData.WorldSizeInChunks / 2) + settings.viewDistance; z++) {
-				ChunkCoord newChunk = new ChunkCoord (x, z);
-				chunks[x, z] = new Chunk (newChunk);
-				chunksToCreate.Add (newChunk);
+	public void AddChunkToUpdate (Chunk chunk) {
+		AddChunkToUpdate (chunk, false);
+	}
+
+	public void AddChunkToUpdate (Chunk chunk, bool insert) {
+		lock (ChunkListThreadLock) {
+
+			if (!chunksToUpdate.Contains (chunk)) {
+				if (insert)
+					chunksToUpdate.Insert (0, chunk);
+				else
+					chunksToUpdate.Add (chunk);
 			}
 		}
-
-		player.position = spawnPosition;
-		CheckViewDistance ();
 	}
 
 	void CheckViewDistance () {
@@ -169,13 +169,11 @@ public class World : MonoBehaviour {
 
 				if (IsChunkInWorld (thisChunkCoord)) {
 
-					if (chunks[x, z] == null) {
+					if (chunks[x, z] == null)
 						chunks[x, z] = new Chunk (thisChunkCoord);
-						chunksToCreate.Add (thisChunkCoord);
-					}
-					else if (!chunks[x, z].isActive) {
-						chunks[x, z].isActive = true;
-					}
+
+					chunks[x, z].isActive = true;
+					activeChunks.Add (thisChunkCoord);
 				}
 
 				for (int i = 0; i < previouslyActiveChunks.Count; i++) {
@@ -190,12 +188,6 @@ public class World : MonoBehaviour {
 		foreach (ChunkCoord c in previouslyActiveChunks) {
 			chunks[c.x, c.z].isActive = false;
 		}
-	}
-
-	void CreateChunk () {
-		ChunkCoord c = chunksToCreate[0];
-		chunksToCreate.RemoveAt (0);
-		chunks[c.x, c.z].Init ();
 	}
 
 	void UpdateChunks () {
@@ -270,7 +262,7 @@ public class World : MonoBehaviour {
 	}
 
 	public VoxelState GetVoxelState (Vector3 pos) {
-		return worldData.GetVoxel(pos);
+		return worldData.GetVoxel (pos);
 	}
 
 	public bool inUI {
@@ -396,9 +388,10 @@ public class World : MonoBehaviour {
 [System.Serializable]
 public class BlockType {
 	public string blockName;
+	public VoxelMeshData voxelMesh;
 	public bool isSolid;
 	public bool renderNeighborFaces;
-	public float transparency;
+	public byte opacity;
 	public Sprite icon;
 
 	public int backFaceTexture;

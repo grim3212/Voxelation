@@ -22,21 +22,21 @@ public static class SaveSystem {
 		formatter.Serialize (stream, world);
 		stream.Close ();
 
-        Thread thread = new Thread(() => SaveChunks(world));
-        thread.Start();
+		Thread thread = new Thread (() => SaveChunks (world));
+		thread.Start ();
 	}
 
-    public static void SaveChunks(WorldData world) {
-        List<ChunkData> chunks = new List<ChunkData>(world.modifiedChunks);
-        world.modifiedChunks.Clear();
+	public static void SaveChunks (WorldData world) {
+		List<ChunkData> chunks = new List<ChunkData> (world.modifiedChunks);
+		world.modifiedChunks.Clear ();
 
-        int count = 0;
-        foreach(ChunkData chunk in chunks){
-            SaveSystem.SaveChunk(chunk, world.worldName);
-            count++;
-        }
-        Debug.Log("Saved " + count + " chunks.");
-    }
+		int count = 0;
+		foreach (ChunkData chunk in chunks) {
+			SaveSystem.SaveChunk (chunk, world.worldName);
+			count++;
+		}
+		Debug.Log ("Saved " + count + " chunks.");
+	}
 
 	public static WorldData LoadWorld (string worldName, int seed = 0) {
 		string loadPath = World.Instance.appPath + "/saves/" + worldName + "/";
@@ -49,7 +49,7 @@ public static class SaveSystem {
 
 			WorldData world = formatter.Deserialize (stream) as WorldData;
 			stream.Close ();
-			return new WorldData(world);
+			return new WorldData (world);
 		}
 		else {
 			Debug.Log (worldName + " not found. Generating new world");
@@ -61,8 +61,8 @@ public static class SaveSystem {
 		}
 	}
 
-    public static void SaveChunk (ChunkData chunk, string worldName) {
-        string chunkName = chunk.position.x + "-" + chunk.position.y;
+	public static void SaveChunk (ChunkData chunk, string worldName) {
+		string chunkName = chunk.position.x + "-" + chunk.position.y;
 		// set save location
 		string savePath = World.Instance.appPath + "/saves/" + worldName + "/chunks/";
 
@@ -77,8 +77,8 @@ public static class SaveSystem {
 		stream.Close ();
 	}
 
-    public static ChunkData LoadChunk (string worldName, Vector2Int position) {
-        string chunkName = position.x + "-" + position.y;
+	public static ChunkData LoadChunk (string worldName, Vector2Int position) {
+		string chunkName = position.x + "-" + position.y;
 		string loadPath = World.Instance.appPath + "/saves/" + worldName + "/chunks/" + chunkName + ".chunk";
 
 		if (File.Exists (loadPath)) {
@@ -89,6 +89,6 @@ public static class SaveSystem {
 			stream.Close ();
 			return chunk;
 		}
-        return null;
+		return null;
 	}
 }

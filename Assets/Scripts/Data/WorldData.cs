@@ -89,8 +89,7 @@ public class WorldData {
 		// Then create  vector3Int with the position of our voxel within the chunk
 		Vector3Int voxel = new Vector3Int ((int)(pos.x - x), (int)pos.y, (int)(pos.z - z));
 
-		chunk.map[voxel.x, voxel.y, voxel.z].id = value;
-		AddToModifiedChunkList (chunk);
+		chunk.ModifyVoxel(voxel, value);
 	}
 
 	public VoxelState GetVoxel (Vector3 pos) {
@@ -107,7 +106,11 @@ public class WorldData {
 		z *= VoxelData.ChunkWidth;
 
 		// Check if chunk exists, if not create it
-		ChunkData chunk = RequestChunk (new Vector2Int (x, z), true);
+		ChunkData chunk = RequestChunk (new Vector2Int (x, z), false);
+
+		if (chunk == null) {
+			return null;
+		}
 
 		// Then create  vector3Int with the position of our voxel within the chunk
 		Vector3Int voxel = new Vector3Int ((int)(pos.x - x), (int)pos.y, (int)(pos.z - z));

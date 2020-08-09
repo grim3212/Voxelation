@@ -719,6 +719,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cloudHeight: 100
+  cloudDepth: 4
   cloudPattern: {fileID: 2800000, guid: 683469a895880bc449ed0f1fde952978, type: 3}
   cloudMaterial: {fileID: 2100000, guid: d92e763af35077644987a14ee9cd765e, type: 2}
   world: {fileID: 1113130122}
@@ -1347,8 +1348,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     version: 0.0.1
+    loadDistance: 16
     viewDistance: 5
     enableThreading: 1
+    clouds: 1
     enableAnimatedChunks: 0
     mouseSensitivity: 1.76
   biomes:
@@ -1364,9 +1367,10 @@ MonoBehaviour:
   transparentMaterial: {fileID: 2100000, guid: 3d7f30fa39b56b74ea02803add9f099e, type: 2}
   blockTypes:
   - blockName: Air
+    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
     isSolid: 0
     renderNeighborFaces: 1
-    transparency: 1
+    opacity: 0
     icon: {fileID: 0}
     backFaceTexture: 0
     frontFaceTexture: 0
@@ -1375,9 +1379,10 @@ MonoBehaviour:
     leftFaceTexture: 0
     rightFaceTexture: 0
   - blockName: Bedrock
+    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
     isSolid: 1
     renderNeighborFaces: 0
-    transparency: 0
+    opacity: 15
     icon: {fileID: 1658201283926802149, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
     backFaceTexture: 9
     frontFaceTexture: 9
@@ -1386,9 +1391,10 @@ MonoBehaviour:
     leftFaceTexture: 9
     rightFaceTexture: 9
   - blockName: Stone
+    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
     isSolid: 1
     renderNeighborFaces: 0
-    transparency: 0
+    opacity: 15
     icon: {fileID: -9190054672469268964, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
     backFaceTexture: 0
     frontFaceTexture: 0
@@ -1397,9 +1403,10 @@ MonoBehaviour:
     leftFaceTexture: 0
     rightFaceTexture: 0
   - blockName: Grass
+    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
     isSolid: 1
     renderNeighborFaces: 0
-    transparency: 0
+    opacity: 15
     icon: {fileID: -2173331863962407998, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
     backFaceTexture: 2
     frontFaceTexture: 2
@@ -1408,9 +1415,10 @@ MonoBehaviour:
     leftFaceTexture: 2
     rightFaceTexture: 2
   - blockName: Sand
+    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
     isSolid: 1
     renderNeighborFaces: 0
-    transparency: 0
+    opacity: 15
     icon: {fileID: 4178355347634356053, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
     backFaceTexture: 10
     frontFaceTexture: 10
@@ -1419,9 +1427,10 @@ MonoBehaviour:
     leftFaceTexture: 10
     rightFaceTexture: 10
   - blockName: Dirt
+    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
     isSolid: 1
     renderNeighborFaces: 0
-    transparency: 0
+    opacity: 15
     icon: {fileID: -8387793910672067857, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
     backFaceTexture: 1
     frontFaceTexture: 1
@@ -1430,9 +1439,10 @@ MonoBehaviour:
     leftFaceTexture: 1
     rightFaceTexture: 1
   - blockName: Wood
+    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
     isSolid: 1
     renderNeighborFaces: 0
-    transparency: 0
+    opacity: 15
     icon: {fileID: 8279079627158457885, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
     backFaceTexture: 5
     frontFaceTexture: 5
@@ -1441,9 +1451,10 @@ MonoBehaviour:
     leftFaceTexture: 5
     rightFaceTexture: 5
   - blockName: Planks
+    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
     isSolid: 1
     renderNeighborFaces: 0
-    transparency: 0
+    opacity: 15
     icon: {fileID: -5579962401935626545, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
     backFaceTexture: 4
     frontFaceTexture: 4
@@ -1452,9 +1463,10 @@ MonoBehaviour:
     leftFaceTexture: 4
     rightFaceTexture: 4
   - blockName: Bricks
+    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
     isSolid: 1
     renderNeighborFaces: 0
-    transparency: 0
+    opacity: 15
     icon: {fileID: -1190241618586288452, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
     backFaceTexture: 11
     frontFaceTexture: 11
@@ -1463,9 +1475,10 @@ MonoBehaviour:
     leftFaceTexture: 11
     rightFaceTexture: 11
   - blockName: Cobblestone
+    voxelMesh: {fileID: 11400000, guid: c47f27d9c65dd0444a7d7ffcb77896bb, type: 2}
     isSolid: 1
     renderNeighborFaces: 0
-    transparency: 0
+    opacity: 15
     icon: {fileID: 7391409288775618200, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
     backFaceTexture: 8
     frontFaceTexture: 8
@@ -1474,9 +1487,10 @@ MonoBehaviour:
     leftFaceTexture: 8
     rightFaceTexture: 8
   - blockName: Glass
+    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
     isSolid: 1
     renderNeighborFaces: 1
-    transparency: 1
+    opacity: 0
     icon: {fileID: -1867609910350370242, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
     backFaceTexture: 3
     frontFaceTexture: 3
@@ -1485,9 +1499,10 @@ MonoBehaviour:
     leftFaceTexture: 3
     rightFaceTexture: 3
   - blockName: Leave
+    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
     isSolid: 1
     renderNeighborFaces: 1
-    transparency: 0.5
+    opacity: 5
     icon: {fileID: -1867609910350370242, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
     backFaceTexture: 16
     frontFaceTexture: 16
@@ -1496,9 +1511,10 @@ MonoBehaviour:
     leftFaceTexture: 16
     rightFaceTexture: 16
   - blockName: Cactus
+    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
     isSolid: 1
     renderNeighborFaces: 1
-    transparency: 0
+    opacity: 15
     icon: {fileID: -1867609910350370242, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
     backFaceTexture: 18
     frontFaceTexture: 18
@@ -1507,9 +1523,10 @@ MonoBehaviour:
     leftFaceTexture: 18
     rightFaceTexture: 18
   - blockName: Cactus Top
+    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
     isSolid: 1
     renderNeighborFaces: 1
-    transparency: 0
+    opacity: 15
     icon: {fileID: -1867609910350370242, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
     backFaceTexture: 19
     frontFaceTexture: 19
@@ -1521,6 +1538,10 @@ MonoBehaviour:
   debugScreen: {fileID: 2007004019}
   creativeInventory: {fileID: 1777786376}
   cursorSlot: {fileID: 1021021157}
+  worldData:
+    worldName: 
+    seed: 0
+  appPath: 
 --- !u!4 &1113130123
 Transform:
   m_ObjectHideFlags: 0

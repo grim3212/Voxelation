@@ -6,11 +6,16 @@ public static class VoxelData {
 	public static readonly int ChunkWidth = 16;
 	public static readonly int ChunkHeight = 128;
 	public static readonly int WorldSizeInChunks = 100;
-	
+
 	// Lighting values
 	public static float minLightLevel = 0.15f;
 	public static float maxLightLevel = 0.8f;
-	public static float lightFalloff = 0.08f;
+
+	public static float unitOfLight {
+		// Light is handled as float (0-1) but Minecraft stores light as a byte (0-15), so we need to how much
+		// of that float a single light level represents.
+		get { return 1f / 16f; }
+	}
 
 	public static int seed;
 
@@ -19,7 +24,7 @@ public static class VoxelData {
 			return (WorldSizeInChunks * ChunkWidth) / 2;
 		}
 	}
-	
+
 	public static int WorldSizeInVoxels {
 		get {
 			return WorldSizeInChunks * ChunkWidth;
@@ -46,13 +51,15 @@ public static class VoxelData {
 	};
 
 	public static readonly Vector3Int[] faceChecks = new Vector3Int[6] {
-		new Vector3Int(0, 0, -1),
-		new Vector3Int(0, 0, 1),
-		new Vector3Int(0, 1, 0),
-		new Vector3Int(0, -1, 0),
-		new Vector3Int(-1, 0, 0),
-		new Vector3Int(1, 0, 0)
+		new Vector3Int(0, 0, -1), // back
+		new Vector3Int(0, 0, 1), // front
+		new Vector3Int(0, 1, 0), // up
+		new Vector3Int(0, -1, 0), // down
+		new Vector3Int(-1, 0, 0), // left
+		new Vector3Int(1, 0, 0) // right
 	};
+
+	public static readonly int[] reverseFaceCheckIndex = new int[6] { 1, 0, 3, 2, 5, 4 };
 
 	public static readonly int[,] voxelTris = new int[6, 4] {
 		// Back, Front, Top, Bottom, Left, Right
