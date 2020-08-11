@@ -34,7 +34,7 @@ public class DebugScreen : MonoBehaviour
         debugText += "\n\n";
         debugText += "XYZ: " + (Mathf.FloorToInt(world.player.transform.position.x) - halfWorldSizeInVoxels) + " / "+ Mathf.FloorToInt(world.player.transform.position.y) + " / "+ (Mathf.FloorToInt(world.player.transform.position.z) - halfWorldSizeInVoxels);
         debugText += "\n";
-        debugText += "Chunk: " + (world.playerChunkCoord.x - halfWorldSizeInChunks) + " / " + (world.playerChunkCoord.z - halfWorldSizeInChunks);
+        debugText += "Chunk: " + (world.playerChunkCoord.x - halfWorldSizeInChunks) + " / " + (world.playerChunkCoord.y - halfWorldSizeInChunks);
 
         text.text = debugText;
 

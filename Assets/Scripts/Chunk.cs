@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Chunk {
 
-	public ChunkCoord coord;
+	public Vector2Int coord;
 	GameObject chunkObject;
 	MeshRenderer meshRenderer;
 	MeshFilter meshFilter;
@@ -21,7 +21,7 @@ public class Chunk {
 	private bool _isActive;
 	ChunkData chunkData;
 
-	public Chunk (ChunkCoord _coord) {
+	public Chunk (Vector2Int _coord) {
 		coord = _coord;
 
 		chunkObject = new GameObject ();
@@ -33,8 +33,8 @@ public class Chunk {
 		meshRenderer.materials = materials;
 
 		chunkObject.transform.SetParent (World.Instance.transform);
-		chunkObject.transform.position = new Vector3 (coord.x * VoxelData.ChunkWidth, 0.0f, coord.z * VoxelData.ChunkWidth);
-		chunkObject.name = "Chunk [" + coord.x + "," + coord.z + "]";
+		chunkObject.transform.position = new Vector3 (coord.x * VoxelData.ChunkWidth, 0.0f, coord.y * VoxelData.ChunkWidth);
+		chunkObject.name = "Chunk [" + coord.x + "," + coord.y + "]";
 		position = chunkObject.transform.position;
 
 		chunkData = World.Instance.worldData.RequestChunk (new Vector2Int ((int)position.x, (int)position.z), true);
@@ -197,38 +197,5 @@ public class Chunk {
 		y += VoxelData.NormalizedBlockTextureSize * uv.y;
 
 		uvs.Add (new Vector2 (x, y));
-	}
-}
-
-//TODO: Change to use unitys Vector2Int
-public class ChunkCoord {
-	public int x;
-	public int z;
-
-	public ChunkCoord () {
-		x = 0;
-		z = 0;
-	}
-
-	public ChunkCoord (int _x, int _z) {
-		x = _x;
-		z = _z;
-	}
-
-	public ChunkCoord (Vector3 pos) {
-		int xCheck = Mathf.FloorToInt (pos.x);
-		int zCheck = Mathf.FloorToInt (pos.z);
-
-		x = xCheck / VoxelData.ChunkWidth;
-		z = zCheck / VoxelData.ChunkWidth;
-	}
-
-	public bool Equals (ChunkCoord other) {
-		if (other == null)
-			return false;
-		else if (other.x == x && other.z == z)
-			return true;
-		else
-			return false;
 	}
 }

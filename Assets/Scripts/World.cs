@@ -21,9 +21,9 @@ public class World : MonoBehaviour {
 	public BlockType[] blockTypes;
 
 	Chunk[,] chunks = new Chunk[VoxelData.WorldSizeInChunks, VoxelData.WorldSizeInChunks];
-	List<ChunkCoord> activeChunks = new List<ChunkCoord> ();
-	public ChunkCoord playerChunkCoord;
-	ChunkCoord playerLastChunkCoord;
+	List<Vector2Int> activeChunks = new List<Vector2Int> ();
+	public Vector2Int playerChunkCoord;
+	Vector2Int playerLastChunkCoord;
 
 	private List<Chunk> chunksToUpdate = new List<Chunk> ();
 	public Queue<Chunk> chunksToDraw = new Queue<Chunk> ();
@@ -155,17 +155,17 @@ public class World : MonoBehaviour {
 	void CheckViewDistance () {
 		clouds.UpdateClouds ();
 
-		ChunkCoord coord = GetChunkCoordFromVector3 (player.position);
-		List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord> (activeChunks);
+		Vector2Int coord = GetChunkCoordFromVector3 (player.position);
+		List<Vector2Int> previouslyActiveChunks = new List<Vector2Int> (activeChunks);
 
 		activeChunks.Clear ();
 
 		playerLastChunkCoord = playerChunkCoord;
 
 		for (int x = coord.x - settings.viewDistance; x < coord.x + settings.viewDistance; x++) {
-			for (int z = coord.z - settings.viewDistance; z < coord.z + settings.viewDistance; z++) {
+			for (int z = coord.y - settings.viewDistance; z < coord.y + settings.viewDistance; z++) {
 
-				ChunkCoord thisChunkCoord = new ChunkCoord (x, z);
+				Vector2Int thisChunkCoord = new Vector2Int (x, z);
 
 				if (IsChunkInWorld (thisChunkCoord)) {
 
@@ -185,8 +185,8 @@ public class World : MonoBehaviour {
 			}
 		}
 
-		foreach (ChunkCoord c in previouslyActiveChunks) {
-			chunks[c.x, c.z].isActive = false;
+		foreach (Vector2Int c in previouslyActiveChunks) {
+			chunks[c.x, c.y].isActive = false;
 		}
 	}
 
@@ -236,11 +236,11 @@ public class World : MonoBehaviour {
 		applyingModifications = false;
 	}
 
-	ChunkCoord GetChunkCoordFromVector3 (Vector3 pos) {
+	Vector2Int GetChunkCoordFromVector3 (Vector3 pos) {
 		int x = Mathf.FloorToInt (pos.x / VoxelData.ChunkWidth);
 		int z = Mathf.FloorToInt (pos.z / VoxelData.ChunkWidth);
 
-		return new ChunkCoord (x, z);
+		return new Vector2Int (x, z);
 	}
 
 	public Chunk GetChunkFromVector3 (Vector3 pos) {
@@ -372,8 +372,8 @@ public class World : MonoBehaviour {
 		return voxelValue;
 	}
 
-	bool IsChunkInWorld (ChunkCoord coord) {
-		if (coord.x > 0 && coord.x < VoxelData.WorldSizeInChunks - 1 && coord.z > 0 && coord.z < VoxelData.WorldSizeInChunks - 1)
+	bool IsChunkInWorld (Vector2Int coord) {
+		if (coord.x > 0 && coord.x < VoxelData.WorldSizeInChunks - 1 && coord.y > 0 && coord.y < VoxelData.WorldSizeInChunks - 1)
 			return true;
 		return false;
 	}
