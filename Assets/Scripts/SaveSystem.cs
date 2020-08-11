@@ -70,11 +70,27 @@ public static class SaveSystem {
 			Directory.CreateDirectory (savePath);
 		}
 
-		BinaryFormatter formatter = new BinaryFormatter ();
-		FileStream stream = new FileStream (savePath + chunkName + ".chunk", FileMode.Create);
+		using (FileStream stream = new FileStream (savePath + chunkName + ".chunk", FileMode.Create)) {
+			using (BinaryWriter bw = new BinaryWriter (stream)) {
+				bw.Write (chunk.position.x);
+				bw.Write (chunk.position.y);
 
-		formatter.Serialize (stream, chunk);
-		stream.Close ();
+				byte[] voxels = new byte[VoxelData.ChunkWidth * VoxelData.ChunkHeight * VoxelData.ChunkWidth];
+				for (int x = 0; x < VoxelData.ChunkWidth; x++) {
+					for (int y = 0; y < VoxelData.ChunkHeight; y++) {
+						for (int z = 0; z < VoxelData.ChunkWidth; z++) {
+
+							voxels[x + VoxelData.ChunkWidth * (y + VoxelData.ChunkHeight * z)] = chunk.map[x, y, z].id;
+
+						}
+					}
+				}
+				bw.Write (voxels);
+
+
+				bw.Flush ();
+			}
+		}
 	}
 
 	public static ChunkData LoadChunk (string worldName, Vector2Int position) {
@@ -82,12 +98,26 @@ public static class SaveSystem {
 		string loadPath = World.Instance.appPath + "/saves/" + worldName + "/chunks/" + chunkName + ".chunk";
 
 		if (File.Exists (loadPath)) {
-			BinaryFormatter formatter = new BinaryFormatter ();
-			FileStream stream = new FileStream (loadPath, FileMode.Open);
+			ChunkData chunkData = null;
+			using (FileStream stream = new FileStream (loadPath, FileMode.Open)) {
+				using (BinaryReader br = new BinaryReader (stream)) {
+					int count = VoxelData.ChunkWidth * VoxelData.ChunkHeight * VoxelData.ChunkWidth;
+					int posX = br.ReadInt32();
+					int posY = br.ReadInt32 ();
+					byte[] voxels = br.ReadBytes (count);
+					chunkData = new ChunkData (new Vector2Int (posX, posY));
 
-			ChunkData chunk = formatter.Deserialize (stream) as ChunkData;
-			stream.Close ();
-			return chunk;
+					for (int x = 0; x < VoxelData.ChunkWidth; x++) {
+						for (int y = 0; y < VoxelData.ChunkHeight; y++) {
+							for (int z = 0; z < VoxelData.ChunkWidth; z++) {
+								byte voxelId = voxels[x + VoxelData.ChunkWidth * (y + VoxelData.ChunkHeight * z)];
+								chunkData.map[x, y, z] = new VoxelState (voxelId, chunkData, new Vector3Int (x, y, z));
+							}
+						}
+					}
+				}
+			}
+			return chunkData;
 		}
 		return null;
 	}

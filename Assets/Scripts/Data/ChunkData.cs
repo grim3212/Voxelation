@@ -23,15 +23,12 @@ public class ChunkData {
 	public ChunkData (Vector2Int pos) {
 		position = pos;
 	}
-	public ChunkData (int _x, int _y) {
-		x = _x;
-		y = _y;
-	}
 
 	[System.NonSerialized]
 	public Chunk chunk;
 
 	[HideInInspector]
+	[System.NonSerialized]
 	public VoxelState[,,] map = new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
 	public void Populate () {
@@ -98,4 +95,5 @@ public class ChunkData {
 	public VoxelState VoxelFromVector3Int (Vector3Int pos) {
 		return map[pos.x, pos.y, pos.z];
 	}
+
 }
