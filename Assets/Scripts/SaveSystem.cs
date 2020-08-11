@@ -76,16 +76,18 @@ public static class SaveSystem {
 				bw.Write (chunk.position.y);
 
 				byte[] voxels = new byte[VoxelData.ChunkWidth * VoxelData.ChunkHeight * VoxelData.ChunkWidth];
+				byte[] lights = new byte[VoxelData.ChunkWidth * VoxelData.ChunkHeight * VoxelData.ChunkWidth];
 				for (int x = 0; x < VoxelData.ChunkWidth; x++) {
 					for (int y = 0; y < VoxelData.ChunkHeight; y++) {
 						for (int z = 0; z < VoxelData.ChunkWidth; z++) {
 
 							voxels[x + VoxelData.ChunkWidth * (y + VoxelData.ChunkHeight * z)] = chunk.map[x, y, z].id;
-
+							lights[x + VoxelData.ChunkWidth * (y + VoxelData.ChunkHeight * z)] = chunk.map[x, y, z].light;
 						}
 					}
 				}
 				bw.Write (voxels);
+				bw.Write (lights);
 
 
 				bw.Flush ();
@@ -102,16 +104,19 @@ public static class SaveSystem {
 			using (FileStream stream = new FileStream (loadPath, FileMode.Open)) {
 				using (BinaryReader br = new BinaryReader (stream)) {
 					int count = VoxelData.ChunkWidth * VoxelData.ChunkHeight * VoxelData.ChunkWidth;
-					int posX = br.ReadInt32();
+					int posX = br.ReadInt32 ();
 					int posY = br.ReadInt32 ();
 					byte[] voxels = br.ReadBytes (count);
+					byte[] lights = br.ReadBytes (count);
 					chunkData = new ChunkData (new Vector2Int (posX, posY));
 
 					for (int x = 0; x < VoxelData.ChunkWidth; x++) {
 						for (int y = 0; y < VoxelData.ChunkHeight; y++) {
 							for (int z = 0; z < VoxelData.ChunkWidth; z++) {
-								byte voxelId = voxels[x + VoxelData.ChunkWidth * (y + VoxelData.ChunkHeight * z)];
-								chunkData.map[x, y, z] = new VoxelState (voxelId, chunkData, new Vector3Int (x, y, z));
+								int index = x + VoxelData.ChunkWidth * (y + VoxelData.ChunkHeight * z);
+								VoxelState state = new VoxelState (voxels[index], chunkData, new Vector3Int (x, y, z));
+								state.light = lights[index];
+								chunkData.map[x, y, z] = state;
 							}
 						}
 					}
