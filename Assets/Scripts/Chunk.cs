@@ -54,16 +54,13 @@ public class Chunk {
 		for (int y = 0; y < VoxelData.ChunkHeight; y++) {
 			for (int x = 0; x < VoxelData.ChunkWidth; x++) {
 				for (int z = 0; z < VoxelData.ChunkWidth; z++) {
-					if (BlockRegistry.GetBlockById(chunkData.map[x, y, z].blockId).isSolid)
+					if (BlockRegistry.GetBlockById (chunkData.map[x, y, z].blockId).isSolid)
 						UpdateMeshData (new Vector3 (x, y, z));
 				}
 			}
 		}
 
-		lock (World.Instance.chunksToDraw) {
-			World.Instance.chunksToDraw.Enqueue (this);
-		}
-
+		World.Instance.chunksToDraw.Enqueue (this);
 	}
 
 
@@ -98,7 +95,7 @@ public class Chunk {
 					vertices.Add (pos + voxel.properties.mesh.faces[p].vertData[i].position);
 					normals.Add (voxel.properties.mesh.faces[p].normal);
 					colors.Add (new Color (0, 0, 0, lightLevel));
-					AddTexture(voxel.properties.GetTextureId(p), voxel.properties.mesh.faces[p].vertData[i].uv);
+					AddTexture (voxel.properties.GetTextureId (p), voxel.properties.mesh.faces[p].vertData[i].uv);
 					faceVertCount++;
 				}
 
