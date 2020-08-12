@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class BlockRegistry {
-  public readonly static BlockMesh STANDARD = new Standard();
-  public readonly static BlockMesh HALFSLAB = new HalfSlab();
+	public readonly static BlockMesh STANDARD = new Standard ();
+	public readonly static BlockMesh HALFSLAB = new HalfSlab ();
 	private static Dictionary<string, Block> _blocks = new Dictionary<string, Block> ();
 
 	public static Dictionary<string, Block> Blocks {
@@ -18,6 +19,13 @@ public class BlockRegistry {
 	}
 
 	public static Block GetBlockById (string blockId) {
-		return _blocks[blockId];
+		try {
+			return _blocks[blockId];
+		}
+		catch (Exception e) {
+			Debug.LogError (e);
+			Debug.Log ("Attempted to get non-existant block id: " + blockId);
+			return _blocks["air"];
+		}
 	}
 }

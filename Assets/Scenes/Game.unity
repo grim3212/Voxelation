@@ -1286,7 +1286,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1054143957}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 800, y: 78, z: 800}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 963194228}
@@ -1365,175 +1365,7 @@ MonoBehaviour:
   spawnPosition: {x: 0, y: 0, z: 0}
   material: {fileID: 2100000, guid: 4c0c60dfe636ae84a9794b910cc7a172, type: 2}
   transparentMaterial: {fileID: 2100000, guid: 3d7f30fa39b56b74ea02803add9f099e, type: 2}
-  blockTypes:
-  - blockName: Air
-    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
-    isSolid: 0
-    renderNeighborFaces: 1
-    opacity: 0
-    icon: {fileID: 0}
-    backFaceTexture: 0
-    frontFaceTexture: 0
-    topFaceTexture: 0
-    bottomFaceTexture: 0
-    leftFaceTexture: 0
-    rightFaceTexture: 0
-  - blockName: Bedrock
-    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
-    isSolid: 1
-    renderNeighborFaces: 0
-    opacity: 15
-    icon: {fileID: 1658201283926802149, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
-    backFaceTexture: 9
-    frontFaceTexture: 9
-    topFaceTexture: 9
-    bottomFaceTexture: 9
-    leftFaceTexture: 9
-    rightFaceTexture: 9
-  - blockName: Stone
-    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
-    isSolid: 1
-    renderNeighborFaces: 0
-    opacity: 15
-    icon: {fileID: -9190054672469268964, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
-    backFaceTexture: 0
-    frontFaceTexture: 0
-    topFaceTexture: 0
-    bottomFaceTexture: 0
-    leftFaceTexture: 0
-    rightFaceTexture: 0
-  - blockName: Grass
-    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
-    isSolid: 1
-    renderNeighborFaces: 0
-    opacity: 15
-    icon: {fileID: -2173331863962407998, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
-    backFaceTexture: 2
-    frontFaceTexture: 2
-    topFaceTexture: 7
-    bottomFaceTexture: 1
-    leftFaceTexture: 2
-    rightFaceTexture: 2
-  - blockName: Sand
-    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
-    isSolid: 1
-    renderNeighborFaces: 0
-    opacity: 15
-    icon: {fileID: 4178355347634356053, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
-    backFaceTexture: 10
-    frontFaceTexture: 10
-    topFaceTexture: 10
-    bottomFaceTexture: 10
-    leftFaceTexture: 10
-    rightFaceTexture: 10
-  - blockName: Dirt
-    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
-    isSolid: 1
-    renderNeighborFaces: 0
-    opacity: 15
-    icon: {fileID: -8387793910672067857, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
-    backFaceTexture: 1
-    frontFaceTexture: 1
-    topFaceTexture: 1
-    bottomFaceTexture: 1
-    leftFaceTexture: 1
-    rightFaceTexture: 1
-  - blockName: Wood
-    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
-    isSolid: 1
-    renderNeighborFaces: 0
-    opacity: 15
-    icon: {fileID: 8279079627158457885, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
-    backFaceTexture: 5
-    frontFaceTexture: 5
-    topFaceTexture: 6
-    bottomFaceTexture: 6
-    leftFaceTexture: 5
-    rightFaceTexture: 5
-  - blockName: Planks
-    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
-    isSolid: 1
-    renderNeighborFaces: 0
-    opacity: 15
-    icon: {fileID: -5579962401935626545, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
-    backFaceTexture: 4
-    frontFaceTexture: 4
-    topFaceTexture: 4
-    bottomFaceTexture: 4
-    leftFaceTexture: 4
-    rightFaceTexture: 4
-  - blockName: Bricks
-    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
-    isSolid: 1
-    renderNeighborFaces: 0
-    opacity: 15
-    icon: {fileID: -1190241618586288452, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
-    backFaceTexture: 11
-    frontFaceTexture: 11
-    topFaceTexture: 11
-    bottomFaceTexture: 11
-    leftFaceTexture: 11
-    rightFaceTexture: 11
-  - blockName: Cobblestone
-    voxelMesh: {fileID: 11400000, guid: c47f27d9c65dd0444a7d7ffcb77896bb, type: 2}
-    isSolid: 1
-    renderNeighborFaces: 0
-    opacity: 15
-    icon: {fileID: 7391409288775618200, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
-    backFaceTexture: 8
-    frontFaceTexture: 8
-    topFaceTexture: 8
-    bottomFaceTexture: 8
-    leftFaceTexture: 8
-    rightFaceTexture: 8
-  - blockName: Glass
-    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
-    isSolid: 1
-    renderNeighborFaces: 1
-    opacity: 0
-    icon: {fileID: -1867609910350370242, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
-    backFaceTexture: 3
-    frontFaceTexture: 3
-    topFaceTexture: 3
-    bottomFaceTexture: 3
-    leftFaceTexture: 3
-    rightFaceTexture: 3
-  - blockName: Leave
-    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
-    isSolid: 1
-    renderNeighborFaces: 1
-    opacity: 5
-    icon: {fileID: -1867609910350370242, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
-    backFaceTexture: 16
-    frontFaceTexture: 16
-    topFaceTexture: 16
-    bottomFaceTexture: 16
-    leftFaceTexture: 16
-    rightFaceTexture: 16
-  - blockName: Cactus
-    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
-    isSolid: 1
-    renderNeighborFaces: 1
-    opacity: 15
-    icon: {fileID: -1867609910350370242, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
-    backFaceTexture: 18
-    frontFaceTexture: 18
-    topFaceTexture: 19
-    bottomFaceTexture: 19
-    leftFaceTexture: 18
-    rightFaceTexture: 18
-  - blockName: Cactus Top
-    voxelMesh: {fileID: 11400000, guid: 32f20312d730c0645b226512d99120fc, type: 2}
-    isSolid: 1
-    renderNeighborFaces: 1
-    opacity: 15
-    icon: {fileID: -1867609910350370242, guid: 07c41da1931d0ba4db1d86cd922b4c02, type: 3}
-    backFaceTexture: 19
-    frontFaceTexture: 19
-    topFaceTexture: 18
-    bottomFaceTexture: 20
-    leftFaceTexture: 19
-    rightFaceTexture: 19
+  playerChunkCoord: {x: 0, y: 0}
   clouds: {fileID: 530563523}
   debugScreen: {fileID: 2007004019}
   creativeInventory: {fileID: 1777786376}
@@ -1550,7 +1382,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1113130121}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.0250154, y: 0.6396656, z: 5.636188}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

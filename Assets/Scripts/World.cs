@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using System.IO;
 
@@ -25,6 +26,9 @@ public class World : MonoBehaviour {
 
 	private List<Chunk> chunksToUpdate = new List<Chunk> ();
 	public Queue<Chunk> chunksToDraw = new Queue<Chunk> ();
+
+	//private Thread chunkUpdateThread;
+	//private System.Object chunkUpdateLock = new System.Object ();
 
 	bool applyingModifications = false;
 
@@ -54,12 +58,13 @@ public class World : MonoBehaviour {
 		}
 
 		appPath = Application.persistentDataPath;
+
+		Debug.Log ("Initializing Voxelation");
+		// When the world starts load all the blocks
+		Init.Load ();
 	}
 
 	private void Start () {
-		// When the world starts load all the blocks
-		Init.Load ();
-
 		Debug.Log ("Generating new world using seed : " + VoxelData.seed);
 
 		worldData = SaveSystem.LoadWorld ("TestingCaves");
@@ -79,6 +84,26 @@ public class World : MonoBehaviour {
 		player.position = spawnPosition;
 		CheckViewDistance ();
 		playerLastChunkCoord = GetChunkCoordFromVector3 (player.position);
+
+		//chunkUpdateThread = new Thread (ThreadedChunkUpdate);
+		//chunkUpdateThread.IsBackground = true;
+		//chunkUpdateThread.Start ();
+	}
+
+	private void ThreadedChunkUpdate () {
+		while (true) {
+			if (!applyingModifications) {
+				ApplyModifications ();
+			}
+
+			if (chunksToUpdate.Count > 0) {
+				UpdateChunks ();
+			}
+		}
+	}
+
+	private void OnDestroy () {
+		//chunkUpdateThread.Abort ();
 	}
 
 	public void SetGlobalLightValue () {
