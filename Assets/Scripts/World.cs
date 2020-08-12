@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using System.Threading;
 
 public class World : MonoBehaviour {
 
@@ -39,10 +38,6 @@ public class World : MonoBehaviour {
 	public GameObject creativeInventory;
 	public GameObject cursorSlot;
 
-	Thread ChunkUpdateThread;
-	public object ChunkUpdateThreadLock = new object ();
-	public object ChunkListThreadLock = new object ();
-
 	private static World _instance;
 	public static World Instance { get { return _instance; } }
 
@@ -63,7 +58,7 @@ public class World : MonoBehaviour {
 
 	private void Start () {
 		// When the world starts load all the blocks
-		Init.Load();
+		Init.Load ();
 
 		Debug.Log ("Generating new world using seed : " + VoxelData.seed);
 
@@ -84,11 +79,6 @@ public class World : MonoBehaviour {
 		player.position = spawnPosition;
 		CheckViewDistance ();
 		playerLastChunkCoord = GetChunkCoordFromVector3 (player.position);
-
-		if (settings.enableThreading) {
-			ChunkUpdateThread = new Thread (new ThreadStart (ThreadedUpdate));
-			ChunkUpdateThread.Start ();
-		}
 	}
 
 	public void SetGlobalLightValue () {
@@ -96,6 +86,7 @@ public class World : MonoBehaviour {
 		Camera.main.backgroundColor = Color.Lerp (night, day, globalLightLevel);
 	}
 
+	//TODO: Optimize updates so that chunks load fast and the wrolds load quick
 	private void Update () {
 		playerChunkCoord = GetChunkCoordFromVector3 (player.position);
 
@@ -103,23 +94,16 @@ public class World : MonoBehaviour {
 			CheckViewDistance ();
 		}
 
-		if (!applyingModifications) {
-			ApplyModifications ();
-		}
-
 		if (chunksToDraw.Count > 0) {
 			chunksToDraw.Dequeue ().CreateMesh ();
 		}
 
-		if (!settings.enableThreading) {
+		if (!applyingModifications) {
+			ApplyModifications ();
+		}
 
-			if (!applyingModifications) {
-				ApplyModifications ();
-			}
-
-			if (chunksToUpdate.Count > 0) {
-				UpdateChunks ();
-			}
+		if (chunksToUpdate.Count > 0) {
+			UpdateChunks ();
 		}
 
 		if (Input.GetKeyDown (KeyCode.F3)) {
@@ -143,14 +127,11 @@ public class World : MonoBehaviour {
 	}
 
 	public void AddChunkToUpdate (Chunk chunk, bool insert) {
-		lock (ChunkListThreadLock) {
-
-			if (!chunksToUpdate.Contains (chunk)) {
-				if (insert)
-					chunksToUpdate.Insert (0, chunk);
-				else
-					chunksToUpdate.Add (chunk);
-			}
+		if (!chunksToUpdate.Contains (chunk)) {
+			if (insert)
+				chunksToUpdate.Insert (0, chunk);
+			else
+				chunksToUpdate.Add (chunk);
 		}
 	}
 
@@ -193,32 +174,11 @@ public class World : MonoBehaviour {
 	}
 
 	void UpdateChunks () {
-
-		lock (ChunkUpdateThreadLock) {
-			chunksToUpdate[0].UpdateChunk ();
-			if (!activeChunks.Contains (chunksToUpdate[0].coord))
-				activeChunks.Add (chunksToUpdate[0].coord);
-			chunksToUpdate.RemoveAt (0);
-		}
+		chunksToUpdate[0].UpdateChunk ();
+		if (!activeChunks.Contains (chunksToUpdate[0].coord))
+			activeChunks.Add (chunksToUpdate[0].coord);
+		chunksToUpdate.RemoveAt (0);
 	}
-
-	void ThreadedUpdate () {
-		while (true) {
-			if (!applyingModifications) {
-				ApplyModifications ();
-			}
-
-			if (chunksToUpdate.Count > 0) {
-				UpdateChunks ();
-			}
-		}
-	}
-
-	private void OnDisable () {
-		if (settings.enableThreading)
-			ChunkUpdateThread.Abort ();
-	}
-
 	void ApplyModifications () {
 		applyingModifications = true;
 
@@ -255,7 +215,7 @@ public class World : MonoBehaviour {
 
 	public bool CheckForVoxel (Vector3 pos) {
 		VoxelState voxel = worldData.GetVoxel (pos);
-		if (BlockRegistry.GetBlockById(voxel.blockId).isSolid) {
+		if (BlockRegistry.GetBlockById (voxel.blockId).isSolid) {
 			return true;
 		}
 		else {

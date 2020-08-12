@@ -32,17 +32,15 @@ public class WorldData {
 	public ChunkData RequestChunk (Vector2Int coord, bool create) {
 		ChunkData c;
 
-		lock (World.Instance.ChunkListThreadLock) {
-			if (chunks.ContainsKey (coord)) {
-				c = chunks[coord];
-			}
-			else if (!create) {
-				c = null;
-			}
-			else {
-				LoadChunk (coord);
-				c = chunks[coord];
-			}
+		if (chunks.ContainsKey (coord)) {
+			c = chunks[coord];
+		}
+		else if (!create) {
+			c = null;
+		}
+		else {
+			LoadChunk (coord);
+			c = chunks[coord];
 		}
 
 		return c;
@@ -89,7 +87,7 @@ public class WorldData {
 		// Then create  vector3Int with the position of our voxel within the chunk
 		Vector3Int voxel = new Vector3Int ((int)(pos.x - x), (int)pos.y, (int)(pos.z - z));
 
-		chunk.ModifyVoxel(voxel, value);
+		chunk.ModifyVoxel (voxel, value);
 	}
 
 	public VoxelState GetVoxel (Vector3 pos) {
