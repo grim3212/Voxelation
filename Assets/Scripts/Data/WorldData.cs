@@ -70,7 +70,7 @@ public class WorldData {
 		return false;
 	}
 
-	public void SetVoxel (Vector3 pos, byte value) {
+	public void SetVoxel (Vector3 pos, string value) {
 		if (!IsVoxelInWorld (pos)) {
 			return;
 		}

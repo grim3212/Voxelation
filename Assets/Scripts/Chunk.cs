@@ -54,7 +54,7 @@ public class Chunk {
 		for (int y = 0; y < VoxelData.ChunkHeight; y++) {
 			for (int x = 0; x < VoxelData.ChunkWidth; x++) {
 				for (int z = 0; z < VoxelData.ChunkWidth; z++) {
-					if (World.Instance.blockTypes[chunkData.map[x, y, z].id].isSolid)
+					if (BlockRegistry.GetBlockById(chunkData.map[x, y, z].blockId).isSolid)
 						UpdateMeshData (new Vector3 (x, y, z));
 				}
 			}
@@ -94,22 +94,22 @@ public class Chunk {
 				float lightLevel = neighbor.lightAsFloat;
 				int faceVertCount = 0;
 
-				for (int i = 0; i < voxel.properties.voxelMesh.faces[p].vertData.Length; i++) {
-					vertices.Add (pos + voxel.properties.voxelMesh.faces[p].vertData[i].position);
-					normals.Add (voxel.properties.voxelMesh.faces[p].normal);
+				for (int i = 0; i < voxel.properties.mesh.faces[p].vertData.Length; i++) {
+					vertices.Add (pos + voxel.properties.mesh.faces[p].vertData[i].position);
+					normals.Add (voxel.properties.mesh.faces[p].normal);
 					colors.Add (new Color (0, 0, 0, lightLevel));
-					AddTexture(voxel.properties.GetTextureId(p), voxel.properties.voxelMesh.faces[p].vertData[i].uv);
+					AddTexture(voxel.properties.GetTextureId(p), voxel.properties.mesh.faces[p].vertData[i].uv);
 					faceVertCount++;
 				}
 
 				if (!voxel.properties.renderNeighborFaces) {
-					for (int i = 0; i < voxel.properties.voxelMesh.faces[p].triangles.Length; i++) {
-						triangles.Add (vertexIndex + voxel.properties.voxelMesh.faces[p].triangles[i]);
+					for (int i = 0; i < voxel.properties.mesh.faces[p].triangles.Length; i++) {
+						triangles.Add (vertexIndex + voxel.properties.mesh.faces[p].triangles[i]);
 					}
 				}
 				else {
-					for (int i = 0; i < voxel.properties.voxelMesh.faces[p].triangles.Length; i++) {
-						transparentTriangles.Add (vertexIndex + voxel.properties.voxelMesh.faces[p].triangles[i]);
+					for (int i = 0; i < voxel.properties.mesh.faces[p].triangles.Length; i++) {
+						transparentTriangles.Add (vertexIndex + voxel.properties.mesh.faces[p].triangles[i]);
 					}
 				}
 
@@ -130,7 +130,7 @@ public class Chunk {
 		}
 	}
 
-	public void EditVoxel (Vector3 pos, byte newId) {
+	public void EditVoxel (Vector3 pos, string newId) {
 		int xCheck = Mathf.FloorToInt (pos.x);
 		int yCheck = Mathf.FloorToInt (pos.y);
 		int zCheck = Mathf.FloorToInt (pos.z);

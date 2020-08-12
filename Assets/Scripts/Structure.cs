@@ -24,13 +24,13 @@ public class Structure {
 		}
 
 		for (int i = 1; i < height; i++) {
-			queue.Enqueue (new VoxelMod (new Vector3 (position.x, position.y + i, position.z), 6));
+			queue.Enqueue (new VoxelMod (new Vector3 (position.x, position.y + i, position.z), "log"));
 		}
 
 		for (int x = -3; x < 4; x++) {
 			for (int y = 0; y < 7; y++) {
 				for (int z = -3; z < 4; z++) {
-					queue.Enqueue (new VoxelMod (new Vector3 (position.x + x, position.y + height + y, position.z + z), 11));
+					queue.Enqueue (new VoxelMod (new Vector3 (position.x + x, position.y + height + y, position.z + z), "leaves"));
 				}
 			}
 		}
@@ -47,7 +47,7 @@ public class Structure {
 		}
 
 		for (int i = 1; i < height; i++) {
-			queue.Enqueue (new VoxelMod (new Vector3 (position.x, position.y + i, position.z), 12));
+			queue.Enqueue (new VoxelMod (new Vector3 (position.x, position.y + i, position.z), "cactus"));
 		}
 
 		return queue;

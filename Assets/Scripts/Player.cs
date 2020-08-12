@@ -128,7 +128,7 @@ public class Player : MonoBehaviour {
 
 		if (highlightBlock.gameObject.activeSelf) {
 			if (Input.GetMouseButtonDown (0)) {
-				world.GetChunkFromVector3 (highlightBlock.position).EditVoxel (highlightBlock.position, 0);
+				world.GetChunkFromVector3 (highlightBlock.position).EditVoxel (highlightBlock.position, "air");
 			}
 			if (Input.GetMouseButtonDown (1)) {
 				if (toolbar.slots[toolbar.slotIndex].HasItem) {

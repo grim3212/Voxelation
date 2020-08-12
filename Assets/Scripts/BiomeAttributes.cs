@@ -13,8 +13,8 @@ public class BiomeAttributes : ScriptableObject {
 	public int terrainHeight;
 	public float terrainScale;
 
-	public byte surfaceBlock;
-	public byte subSurfaceBlock;
+	public string surfaceBlock;
+	public string subSurfaceBlock;
 
 	[Header ("Major Flora")]
 	public int majorFloraIndex;
@@ -35,7 +35,7 @@ public class BiomeAttributes : ScriptableObject {
 [System.Serializable]
 public class Lode {
 	public string nodeName;
-	public byte blockId;
+	public string blockId;
 	public int minHeight;
 	public int maxHeight;
 	public float scale;

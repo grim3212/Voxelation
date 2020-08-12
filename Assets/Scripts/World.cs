@@ -18,7 +18,6 @@ public class World : MonoBehaviour {
 	public Vector3 spawnPosition;
 	public Material material;
 	public Material transparentMaterial;
-	public BlockType[] blockTypes;
 
 	Chunk[,] chunks = new Chunk[VoxelData.WorldSizeInChunks, VoxelData.WorldSizeInChunks];
 	List<Vector2Int> activeChunks = new List<Vector2Int> ();
@@ -63,6 +62,9 @@ public class World : MonoBehaviour {
 	}
 
 	private void Start () {
+		// When the world starts load all the blocks
+		Init.Load();
+
 		Debug.Log ("Generating new world using seed : " + VoxelData.seed);
 
 		worldData = SaveSystem.LoadWorld ("TestingCaves");
@@ -253,7 +255,7 @@ public class World : MonoBehaviour {
 
 	public bool CheckForVoxel (Vector3 pos) {
 		VoxelState voxel = worldData.GetVoxel (pos);
-		if (blockTypes[voxel.id].isSolid) {
+		if (BlockRegistry.GetBlockById(voxel.blockId).isSolid) {
 			return true;
 		}
 		else {
@@ -286,18 +288,18 @@ public class World : MonoBehaviour {
 		}
 	}
 
-	public byte GetVoxel (Vector3 pos) {
+	public string GetVoxel (Vector3 pos) {
 		int yPos = Mathf.FloorToInt (pos.y);
 
 		// Immutable Pass
 
 		//If outside worlds return air
 		if (!IsVoxelInWorld (pos))
-			return 0;
+			return "air";
 
 		// If bottom block of chunk, return bedrock
 		if (yPos == 0)
-			return 1;
+			return "bedrock";
 
 		// Biome Select Pass
 		int solidGroundHeight = 42;
@@ -333,21 +335,21 @@ public class World : MonoBehaviour {
 
 		// Basic Terrain Pass
 
-		byte voxelValue = 0;
+		string voxelValue = "air";
 
 		if (yPos == terrainHeight)
 			voxelValue = biome.surfaceBlock;
 		else if (yPos < terrainHeight && yPos > terrainHeight - 4)
 			voxelValue = biome.subSurfaceBlock;
 		else if (yPos > terrainHeight)
-			return 0;
+			return "air";
 		else
-			voxelValue = 2;
+			voxelValue = "stone";
 
 
 		// Second Pass
 
-		if (voxelValue == 2) {
+		if (voxelValue == "stone") {
 			foreach (Lode lode in biome.lodes) {
 				if (yPos > lode.minHeight && yPos < lode.maxHeight) {
 					if (Noise.Get3DPerlin (pos, lode.noiseOffset, lode.scale, lode.threshold)) {
@@ -385,57 +387,16 @@ public class World : MonoBehaviour {
 	}
 }
 
-[System.Serializable]
-public class BlockType {
-	public string blockName;
-	public VoxelMeshData voxelMesh;
-	public bool isSolid;
-	public bool renderNeighborFaces;
-	public byte opacity;
-	public Sprite icon;
-
-	public int backFaceTexture;
-	public int frontFaceTexture;
-	public int topFaceTexture;
-	public int bottomFaceTexture;
-	public int leftFaceTexture;
-	public int rightFaceTexture;
-
-	// Back, Front, Top, Bottom, Left, Right
-
-	public int GetTextureId (int faceIndex) {
-		switch (faceIndex) {
-			case 0:
-				return backFaceTexture;
-			case 1:
-				return frontFaceTexture;
-			case 2:
-				return topFaceTexture;
-			case 3:
-				return bottomFaceTexture;
-			case 4:
-				return leftFaceTexture;
-			case 5:
-				return rightFaceTexture;
-			default:
-				Debug.Log ("Error in GetTextureId, invalid faceIndex");
-				// Have a default error texture to use
-				return 0;
-
-		}
-	}
-}
-
 public class VoxelMod {
 	public Vector3 position;
-	public byte id;
+	public string id;
 
 	public VoxelMod () {
 		position = new Vector3 ();
-		id = 0;
+		id = "air";
 	}
 
-	public VoxelMod (Vector3 _position, byte _id) {
+	public VoxelMod (Vector3 _position, string _id) {
 		position = _position;
 		id = _id;
 	}

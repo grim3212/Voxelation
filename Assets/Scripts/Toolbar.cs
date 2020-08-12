@@ -13,7 +13,7 @@ public class Toolbar : MonoBehaviour {
 
 		byte index = 1;
 		foreach (UIItemSlot s in slots) {
-			ItemStack stack = new ItemStack (index, 14);
+			ItemStack stack = new ItemStack ("glass", 64);
 			ItemSlot slot = new ItemSlot (slots[index - 1], stack);
 			index++;
 		}

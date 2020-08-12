@@ -57,18 +57,18 @@ public class ChunkData {
 		World.Instance.worldData.AddToModifiedChunkList (this);
 	}
 
-	public void ModifyVoxel (Vector3Int pos, byte _id) {
-		if (map[pos.x, pos.y, pos.z].id == _id) {
+	public void ModifyVoxel (Vector3Int pos, string _id) {
+		if (map[pos.x, pos.y, pos.z].blockId == _id) {
 			return;
 		}
 
 		VoxelState voxel = map[pos.x, pos.y, pos.z];
-		BlockType newVoxel = World.Instance.blockTypes[_id];
+		Block newVoxel = BlockRegistry.GetBlockById(_id);
 
 		//Cache old opacity value
 		byte oldOpacity = voxel.properties.opacity;
 
-		voxel.id = _id;
+		voxel.blockId = _id;
 
 		if (voxel.properties.opacity != oldOpacity && (pos.y == VoxelData.ChunkHeight - 1 || map[pos.x, pos.y + 1, pos.z].light == 15)) {
 			Lighting.CastNaturalLight (this, pos.x, pos.z, pos.y + 1);

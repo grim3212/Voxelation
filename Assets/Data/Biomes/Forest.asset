@@ -17,8 +17,8 @@ MonoBehaviour:
   scale: 0.17
   terrainHeight: 80
   terrainScale: 0.3
-  surfaceBlock: 5
-  subSurfaceBlock: 5
+  surfaceBlock: dirt
+  subSurfaceBlock: dirt
   majorFloraIndex: 0
   majorFloraZoneScale: 1.3
   majorFloraZoneThreshold: 0.384
@@ -29,21 +29,21 @@ MonoBehaviour:
   minHeight: 5
   lodes:
   - nodeName: Dirt
-    blockId: 5
+    blockId: dirt
     minHeight: 1
     maxHeight: 255
     scale: 0.1
     threshold: 0.5
     noiseOffset: 0
   - nodeName: Sand
-    blockId: 4
+    blockId: sand
     minHeight: 30
     maxHeight: 60
     scale: 0.2
     threshold: 0.6
     noiseOffset: 500
   - nodeName: Cave
-    blockId: 0
+    blockId: air
     minHeight: 5
     maxHeight: 60
     scale: 0.1

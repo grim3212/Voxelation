@@ -4,7 +4,7 @@ using UnityEngine;
 
 [System.Serializable]
 public class VoxelState {
-	public byte id;
+	public string blockId;
 	[System.NonSerialized]
 	private byte _light;
 
@@ -70,8 +70,8 @@ public class VoxelState {
 		}
 	}
 
-	public VoxelState (byte _id, ChunkData _chunkData, Vector3Int _position) {
-		id = _id;
+	public VoxelState (string _id, ChunkData _chunkData, Vector3Int _position) {
+		blockId = _id;
 		chunkData = _chunkData;
 		neighbors = new VoxelNeighbors (this);
 		position = _position;
@@ -119,9 +119,9 @@ public class VoxelState {
 		}
 	}
 
-	public BlockType properties {
+	public Block properties {
 		get {
-			return World.Instance.blockTypes[id];
+			return BlockRegistry.GetBlockById(blockId);
 		}
 	}
 }

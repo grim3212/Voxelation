@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemStack {
-	public byte id;
+	public string id;
 	public int amount;
 
-	public ItemStack (byte _id, int _amount) {
+	public ItemStack (string _id, int _amount) {
 		id = _id;
 		amount = _amount;
 	}
